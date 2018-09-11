@@ -5,7 +5,8 @@ library(plotly)
 shinyUI(dashboardPage(skin = "green",
   dashboardHeader(title = "Córdoba en Datos"),
   dashboardSidebar(sidebarMenu(
-    menuItem("Plan de Metas", tabName = "dashboard", icon = icon("dashboard"))
+    menuItem("Plan de Metas", tabName = "dashboard", icon = icon("dashboard")),
+    menuItem("Permisionarios Urbanos", tabName = "permisionariosUrbanos", icon = icon("car"))
   )),
   dashboardBody(
     tabItems(
@@ -34,7 +35,23 @@ shinyUI(dashboardPage(skin = "green",
               fluidRow(
                 box(plotlyOutput("plotEstadoMetasPorLineamiento"), title = "Cantidad de Metas por Estado y Lineamiento",width = 12)
               )
+              ),
+      tabItem(tabName = "permisionariosUrbanos",
+              fluidRow(
+                box("Estadísticas sobre los Permisionarios Urbanos Habilitados encargados de cobrar y controlar el estacionamiento en la ciudad de Córdoba (comúnmente mal llamados naranjitas).",
+                    title = "Permisionarios Urbanos", 
+                    width = 9),
+                valueBoxOutput("cantidadTotalPermisionarios", width = 3)
+              ),
+              fluidRow(
+                box(plotlyOutput("permisionariosPorCooperativa"), 
+                    title = "Cantidad de Permisionarios por Cooperativa", 
+                    width = 6),
+                box(tags$iframe(src="https://www.google.com/maps/d/embed?mid=1dZ8XX2nP9XX24CyzsbbR9gQUuwA&hl=es", 
+                                height = "600", width = "100%"),
+                width = 6)
               )
+          )
       )
     )
   )

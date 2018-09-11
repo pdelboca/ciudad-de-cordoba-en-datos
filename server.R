@@ -1,23 +1,8 @@
 library(shiny)
-library(readr)
 library(dplyr)
-library(stringr)
 library(ggplot2)
 library(plotly)
-
-plan_metas <- read_csv("https://gobiernoabierto.cordoba.gob.ar/plan-de-metas/plan-1-metas.csv")
-colnames(plan_metas) <- tolower(colnames(plan_metas))
-colnames(plan_metas) <- str_replace(colnames(plan_metas)," ", "_")
-colnames(plan_metas)[11] <- "lineamiento"
-
-cant_estado_metas <- plan_metas %>% 
-  group_by(estado_meta) %>% 
-  summarise(cant_estado_meta = n())
-
-metas_por_lineamiento_y_estado <- plan_metas %>%
-  group_by(id_lineamiento, lineamiento, estado_meta) %>%
-  count() %>%
-  ungroup()
+source("./data/data.R")
 
 shinyServer(function(input, output) {
   # Metas por Lineamiento
@@ -105,6 +90,29 @@ shinyServer(function(input, output) {
       xlab("") + ylab("")
     
       ggplotly(plot)
+  })
+  
+  ##################################################################################################
+  # Permisionarios
+  output$permisionariosPorCooperativa <- renderPlotly({
+    plot <- permisionarios %>%
+      mutate(cooperativa = str_replace(cooperativa, "Cooperativa de Trabajo", ""),
+             cooperativa = str_replace_all(cooperativa, "\"", ""),
+             cooperativa = str_replace(cooperativa, "Ltda.", "")) %>% 
+      group_by(cooperativa) %>%
+      count() %>%
+      ungroup() %>%
+      ggplot() +
+      geom_col(aes(x=cooperativa, y=n)) + theme_minimal() +
+      xlab("Cooperativa de Trabajo") + ylab("Cantidad de Permisionarios")
+    
+    ggplotly(plot)
+    })
+  
+  output$cantidadTotalPermisionarios <- renderValueBox({
+    valueBox(
+      nrow(permisionarios), "Permisionarios Habilitados", icon = icon("users")
+      )
   })
   
 })
