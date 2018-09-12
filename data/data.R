@@ -1,7 +1,3 @@
-library(readr)
-library(dplyr)
-library(stringr)
-
 plan_metas <- read_csv("https://gobiernoabierto.cordoba.gob.ar/plan-de-metas/plan-1-metas.csv")
 colnames(plan_metas) <- colnames(plan_metas) %>% 
   tolower() %>% 

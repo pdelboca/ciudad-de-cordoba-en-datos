@@ -2,6 +2,9 @@ library(shiny)
 library(dplyr)
 library(ggplot2)
 library(plotly)
+library(readr)
+library(dplyr)
+library(stringr)
 source("./data/data.R")
 
 shinyServer(function(input, output) {
